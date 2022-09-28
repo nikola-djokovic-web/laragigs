@@ -12,7 +12,10 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
+        <script src="//unpkg.com/alpinejs" defer></script>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/5.0.7/sweetalert2.min.css" rel="stylesheet">
         <script>
             tailwind.config = {
                 theme: {
@@ -32,20 +35,40 @@
                     ><img class="w-24" src="{{asset('images/logo.png')}}" alt="" class="logo"
                 /></a>
                 <ul class="flex space-x-6 mr-6 text-lg">
+                    @auth
                     <li>
-                        <a href="register.html" class="hover:text-laravel"
+                        <span class="font-bold uppercase">Welcome {{auth()->user()->name}}</span>
+                    </li>
+                    <li>
+                        <a href="/listings/manage" class="hover:text-laravel"
+                            ><i class="fa-solid fa-gear"></i>
+                            Manage listings</a
+                        >
+                    </li>
+                    <li>
+                        <form class="inline" method="POST" action="/logout">
+                            @csrf
+                            <button type="submit"><i class="fa-solid fa-door-closed">Logout</i></button>
+                        </form>
+                    </li>
+                    @else
+                    <li>
+                        <a href="/register" class="hover:text-laravel"
                             ><i class="fa-solid fa-user-plus"></i> Register</a
                         >
                     </li>
                     <li>
-                        <a href="login.html" class="hover:text-laravel"
+                        <a href="/login" class="hover:text-laravel"
                             ><i class="fa-solid fa-arrow-right-to-bracket"></i>
                             Login</a
                         >
                     </li>
+                    @endauth
                 </ul>
             </nav>
         <main>    
+            <x-flash-message />
+
             {{$slot}}
         </main>
          <footer
@@ -54,10 +77,13 @@
             <p class="ml-2">Copyright &copy; 2022, All Rights reserved</p>
 
             <a
-                href="create.html"
+                href="/listings/create"
                 class="absolute top-1/3 right-10 bg-black text-white py-2 px-5"
                 >Post Job</a
             >
         </footer>
+        
+        @yield('scripts')
+        <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
     </body>
 </html>
